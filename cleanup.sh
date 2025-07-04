@@ -14,7 +14,7 @@
 RECORDINGS_PATH="/opt/1/录播"
 
 # 最大空间限制 (GB)
-MAX_SIZE_GB=90
+MAX_SIZE_GB=130
 
 # [新增] 需要在清理中排除的文件名列表，用空格隔开
 # 使用通配符时需要引号，例如 "*.log"
@@ -23,7 +23,7 @@ EXCLUDE_FILES=("config.json" "config.backup.json")
 # 是否为试运行模式 (dry run)
 # true: 只打印要删除的文件和目录，不实际操作
 # false: 真正执行删除操作
-DRY_RUN=true
+DRY_RUN=false
 
 # --- 脚本主体 (非专业人士请勿修改以下内容) ---
 
@@ -66,7 +66,7 @@ echo -e "\n--- 开始检查并清理文件 ---"
 while (( current_size_kb > MAX_SIZE_KB )); do
     
     # [修改] 在查找时加入排除参数
-    oldest_file=$(find "$RECORDINGS_PATH" -type f "${find_exclude_args[@]}" -printf '%T@ %p\n' | sort -n | head -1 | cut -d' ' -f2-)
+    oldest_file=$(find "$RECORDINGS_PATH" -type f "${find_exclude_args[@]}" -printf '%T@ %p\n' | sort -n | head -1 | cut -d' ' -f2-) || true
 
     if [ -z "$oldest_file" ]; then
         echo "没有找到任何可删除的文件（已排除配置文件）。脚本终止。"
